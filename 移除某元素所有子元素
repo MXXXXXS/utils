@@ -1,0 +1,1 @@
+while (rootEL.firstChild) { rootEl.firstChild.remove() }
