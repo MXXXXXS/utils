@@ -1,3 +1,7 @@
+from typing import Callable
+from os import listdir, makedirs
+from os.path import join, abspath, isdir, exists, dirname
+
 # 遍历一个文件夹内容到另一个文件夹下, 对每一个文件执行一个回调
 def traverse(src: str, dest: str, cb: Callable[[str, str], None]) -> None:
     src = abspath(src)
