@@ -1,22 +1,34 @@
 const fs = require('fs')
 const path = require('path')
 
-let collectFiles = (dir, deep = true) => {
-  let filesCollection = []
+function collectFiles(dir, deep = true) {
+  const filesCollection = []
   recursion(dir, deep)
-
   function recursion(dir, deep) {
     let files = fs.readdirSync(dir)
     files.forEach(item => {
-      let isDir = fs.statSync(path.resolve(dir, item)).isDirectory()
+      const itemPath = path.resolve(dir, item)
+      const isDir = fs.statSync(itemPath).isDirectory()
       if (isDir && deep) {
-        recursion(path.resolve(dir, item))
+        recursion(itemPath)
       } else if (!isDir) {
-        filesCollection.push(path.resolve(dir, item))
+        filesCollection.push(itemPath)
       }
     })
   }
   return filesCollection
 }
 
-module.exports = collectFiles
+function traverse(dir, cb, deep = true) {
+  fs.readdirSync(dir).forEach(item => {
+    const itemPath = path.resolve(dir, item)
+    const isDir = fs.statSync(itemPath).isDirectory()
+    if (isDir && deep) {
+      traverse(itemPath, cb)
+    } else if (!isDir) {
+      cb(itemPath)
+    }
+  })
+}
+
+module.exports = {collectFiles, traverse}
